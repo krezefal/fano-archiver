@@ -4,7 +4,7 @@
 #include <list>
 #include <vector>
 #include <string>
-#include "triad.h"
+#include "triad.hpp"
 #include "binary_tree.hpp"
 
 using CodeFano = std::vector<bool>;
@@ -23,13 +23,13 @@ private:
 	std::string FanoTreeCipher;
 	enum class Action { Compress, Decompress } NextAction;
 	long TotalAmount;
-	short StrtIdx;
+	short StartIdx;
 
 //~~~~~~~~~~~~~~~~~~~~FANO~TABLE~~~~~~~~~~~~~~~~~~~~
 
 	void ConstructFanoTable(std::ifstream& Input);
-	void FillbyUniqBytesAndAmounts(std::ifstream& Input, std::vector<Column>& TmpTable);
-	void FillbyFanoCodes(std::vector<Column>& TmpTable, long Amount, long LeftBoard, long RightBoard);
+	void FillByUniqBytesAndAmounts(std::ifstream& Input, std::vector<Column>& TmpTable);
+	void FillByFanoCodes(std::vector<Column>& TmpTable, long Amount, long LeftBoard, long RightBoard);
 	void SaveToFanoTable(std::vector<Column>& TmpTable);
 
 //~~~~~~~~~~~~~~~~~~~~FANO~TREE~~~~~~~~~~~~~~~~~~~~~
@@ -55,6 +55,6 @@ public:
 
 	FanoCodeStore(std::ifstream& Input, char Action);
 	void CompressData(std::ifstream& Input, std::ofstream& Output);
-	void DEcompressData(std::ifstream& Input, std::ofstream& Output);
+	void DecompressData(std::ifstream& Input, std::ofstream& Output);
 	~FanoCodeStore();
 };

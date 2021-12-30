@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include "../utils/fano.h"
+#include "../include/fano.hpp"
 
 int main(int argc, char **argv) {
 	std::ifstream In;
@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
 		if (Action == 'd') {
 			std::cout << "Try to decompress data..." << std::endl;
 			try {
-				Archiver.DEcompressData(In, Out);
+				Archiver.DecompressData(In, Out);
 				std::cout << "File was successfully decompressed!" << std::endl;
 			}
 			catch (const std::exception &e) {
