@@ -1,17 +1,14 @@
 #pragma once
 
-class BinaryTree
-{
+class BinaryTree {
 public:
-	class Node
-	{
+	class Node {
 	public:
 		unsigned char UniqByte;
 		Node* Left;
 		Node* Right;
 		Node() {}
-		Node(unsigned char Byte)
-		{
+		Node(unsigned char Byte) {
 			UniqByte = Byte;
 			Left = NULL;
 			Right = NULL;
@@ -20,10 +17,8 @@ public:
 	};
 	Node* Root;
 	BinaryTree() { Root = NULL; }
-	void Erase(Node*& CurNode)
-	{
-		if (CurNode != NULL)
-		{
+	void Erase(Node*& CurNode) {
+		if (CurNode != NULL) {
 			Erase(CurNode->Left);
 			Erase(CurNode->Right);
 			delete CurNode;

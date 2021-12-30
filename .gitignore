@@ -13,3 +13,7 @@ bin
 *.swp
 *.swo
 *~
+
+# App
+fano-archiver
+

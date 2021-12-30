@@ -2,7 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
-#include "FanoCodeStore.h"
+#include "../utils/fano.h"
 
 
 
@@ -14,14 +14,11 @@
 
 
 
-FanoCodeStore::FanoCodeStore(std::ifstream& Input, char Action)
-{
-	if (Input.is_open())
-	{
+FanoCodeStore::FanoCodeStore(std::ifstream& Input, char Action) {
+	if (Input.is_open()) {
 		try { CheckFileContents(Input); }
 		catch (...) { throw; }
-		switch (Action)
-		{
+		switch (Action) {
 		case 'c':
 			ConstructFanoTable(Input);
 			break;
@@ -48,8 +45,7 @@ FanoCodeStore::~FanoCodeStore() {}
 
 
 
-void FanoCodeStore::ConstructFanoTable(std::ifstream& Input)
-{
+void FanoCodeStore::ConstructFanoTable(std::ifstream& Input) {
 	std::cout << std::endl;
 	std::vector<Column> TmpTable;
 	NextAction = Action::Compress;
@@ -71,24 +67,19 @@ void FanoCodeStore::ConstructFanoTable(std::ifstream& Input)
 	std::cout << "Fano table was constructed successfully" << std::endl;
 }
 
-void FanoCodeStore::FillbyUniqBytesAndAmounts(std::ifstream& Input, std::vector<Column>& TmpTable)
-{
+void FanoCodeStore::FillbyUniqBytesAndAmounts(std::ifstream& Input, std::vector<Column>& TmpTable) {
 	unsigned char UniqByte = Input.get();
-	while (!Input.eof())
-	{
+	while (!Input.eof()) {
 		bool Unique = true;
 		long endOfFT = TmpTable.end() - TmpTable.begin();
-		for (long i = 0; i < endOfFT; i++)
-		{
-			if (TmpTable[i].First == UniqByte)
-			{
+		for (long i = 0; i < endOfFT; i++) {
+			if (TmpTable[i].First == UniqByte) {
 				Unique = false;
 				TmpTable[i].Second++;
 				break;
 			}
 		}
-		if (Unique == true)
-		{
+		if (Unique == true) {
 			CodeFano Empty;
 			Column NewColumn(UniqByte, 1, Empty);
 			TmpTable.push_back(NewColumn);
@@ -98,12 +89,9 @@ void FanoCodeStore::FillbyUniqBytesAndAmounts(std::ifstream& Input, std::vector<
 	}
 }
 
-void FanoCodeStore::FillbyFanoCodes(std::vector<Column>& TmpTable, long Amount, long LeftBoard, long RightBoard)
-{
-	if (LeftBoard == RightBoard - 1)
-	{
-		if (LeftBoard == 0 && RightBoard == TmpTable.size())
-		{
+void FanoCodeStore::FillbyFanoCodes(std::vector<Column>& TmpTable, long Amount, long LeftBoard, long RightBoard) {
+	if (LeftBoard == RightBoard - 1) {
+		if (LeftBoard == 0 && RightBoard == TmpTable.size()) {
 			TmpTable[LeftBoard].Third.push_back(0);
 		}
 		FanoTreeCipher.push_back(' ');
@@ -114,14 +102,12 @@ void FanoCodeStore::FillbyFanoCodes(std::vector<Column>& TmpTable, long Amount, 
 	long CurrentMid = 0;
 	long CurrentLeftBoard = LeftBoard;
 
-	while (PerfectMid - (CurrentMid + TmpTable[CurrentLeftBoard].Second) > 0)
-	{
+	while (PerfectMid - (CurrentMid + TmpTable[CurrentLeftBoard].Second) > 0) {
 		CurrentMid += TmpTable[CurrentLeftBoard].Second;
 		CurrentLeftBoard++;
 	}
 
-	if (PerfectMid - CurrentMid >= (CurrentMid + TmpTable[CurrentLeftBoard].Second) - PerfectMid)
-	{
+	if (PerfectMid - CurrentMid >= (CurrentMid + TmpTable[CurrentLeftBoard].Second) - PerfectMid) {
 		CurrentMid += TmpTable[CurrentLeftBoard].Second;
 		CurrentLeftBoard++;
 	}
@@ -138,8 +124,7 @@ void FanoCodeStore::FillbyFanoCodes(std::vector<Column>& TmpTable, long Amount, 
 	FillbyFanoCodes(TmpTable, Amount - CurrentMid, CurrentLeftBoard, RightBoard);
 }
 
-void FanoCodeStore::SaveToFanoTable(std::vector<Column>& TmpTable)
-{
+void FanoCodeStore::SaveToFanoTable(std::vector<Column>& TmpTable) {
 	long endOfFT = TmpTable.end() - TmpTable.begin();
 	for (long i = 0; i < endOfFT; i++)
 		FanoTable[TmpTable[i].First] = TmpTable[i].Third;
@@ -155,13 +140,11 @@ void FanoCodeStore::SaveToFanoTable(std::vector<Column>& TmpTable)
 
 
 
-void FanoCodeStore::ConstructFanoTree(std::ifstream& Input)
-{
+void FanoCodeStore::ConstructFanoTree(std::ifstream& Input) {
 	std::cout << std::endl;
 	NextAction = Action::Decompress;
 	std::cout << "Begin extracting Fano tree from the compressed file to decompress..." << std::endl;
-	try 
-	{
+	try {
 		GetFanoTreeCipher(Input);
 		std::cout << "Fano tree cipher was read from the file" << std::endl;
 
@@ -174,13 +157,11 @@ void FanoCodeStore::ConstructFanoTree(std::ifstream& Input)
 	catch (...) { throw; }
 }
 
-void FanoCodeStore::GetFanoTreeCipher(std::ifstream& Input)
-{
+void FanoCodeStore::GetFanoTreeCipher(std::ifstream& Input) {
 	unsigned char BufSymbFirst = Input.get();
 	unsigned char BufSymbMid = Input.get();
 	unsigned char BufSymbLast = Input.get();
-	while (!Input.eof() && !(BufSymbFirst == ' ' && BufSymbLast == '\n'))
-	{
+	while (!Input.eof() && !(BufSymbFirst == ' ' && BufSymbLast == '\n')) {
 		FanoTreeCipher.push_back(BufSymbFirst);
 		BufSymbFirst = BufSymbMid;
 		BufSymbMid = BufSymbLast;
@@ -192,16 +173,13 @@ void FanoCodeStore::GetFanoTreeCipher(std::ifstream& Input)
 	FanoTreeCipher.push_back(BufSymbMid);
 }
 
-void FanoCodeStore::DefineTotalAmount()
-{
+void FanoCodeStore::DefineTotalAmount() {
 	int i = 0;
 	bool CarrRetIsFirstSymbol = true;
 	bool NotAdigitBeforeCarrRet = false;
-	while (FanoTreeCipher[i] != '\0' && FanoTreeCipher[i] != '\n')
-	{
+	while (FanoTreeCipher[i] != '\0' && FanoTreeCipher[i] != '\n') {
 		CarrRetIsFirstSymbol = false;
-		if (!IsDigit(FanoTreeCipher[i]))
-		{
+		if (!IsDigit(FanoTreeCipher[i])) {
 			NotAdigitBeforeCarrRet = true;
 			break;
 		}
@@ -215,20 +193,16 @@ void FanoCodeStore::DefineTotalAmount()
 	StrtIdx = i + 1;
 }
 
-void FanoCodeStore::BuildFanoTree(Node*& CurNode, long LeftBoard, long RightBoard)
-{
+void FanoCodeStore::BuildFanoTree(Node*& CurNode, long LeftBoard, long RightBoard) {
 	CurNode = new Node();
-	if (FanoTreeCipher[LeftBoard] == ' ')
-	{
+	if (FanoTreeCipher[LeftBoard] == ' ') {
 		CurNode->UniqByte = FanoTreeCipher[++LeftBoard];
 		return;
 	}
-	else
-	{
+	else {
 		int Stack = 1;
 		long Center = LeftBoard;
-		while (Stack != 0 && Center != RightBoard)
-		{
+		while (Stack != 0 && Center != RightBoard) {
 			Center++;
 			if (FanoTreeCipher[Center] == '0' && FanoTreeCipher[Center - 1] != ' ') Stack++;
 			if (FanoTreeCipher[Center] == '1' && FanoTreeCipher[Center - 2] == ' ') Stack--;
@@ -250,25 +224,20 @@ void FanoCodeStore::BuildFanoTree(Node*& CurNode, long LeftBoard, long RightBoar
 
 
 
-void FanoCodeStore::CompressData(std::ifstream& Input, std::ofstream& Output)
-{
-	if (NextAction == Action::Compress)
-	{
+void FanoCodeStore::CompressData(std::ifstream& Input, std::ofstream& Output) {
+	if (NextAction == Action::Compress) {
 		Input.clear();
 		Input.seekg(0);
 		Output << FanoTreeCipher << std::endl;
 		int Count = 0;
 		unsigned char Buffer = 0;
-		for (long i = 0; i < TotalAmount; i++)
-		{
+		for (long i = 0; i < TotalAmount; i++) {
 			unsigned char CurrentByte = Input.get();
 			CodeFano CurrentByteCode = FanoTable[CurrentByte];
-			for (long i = 0; i < CurrentByteCode.size(); i++)
-			{
+			for (long i = 0; i < CurrentByteCode.size(); i++) {
 				Buffer = Buffer | CurrentByteCode[i] << ((NumberOfBits - 1) - Count);
 				Count++;
-				if (Count == NumberOfBits)
-				{
+				if (Count == NumberOfBits) {
 					Output << Buffer;
 					Count = 0;
 					Buffer = 0;
@@ -282,12 +251,9 @@ void FanoCodeStore::CompressData(std::ifstream& Input, std::ofstream& Output)
 	exit(PROGRAMMER_ERROR);
 }
 
-void FanoCodeStore::DEcompressData(std::ifstream& Input, std::ofstream& Output)
-{
-	if (NextAction == Action::Decompress)
-	{
-		if (FanoTree.Root->Left == NULL && FanoTree.Root->Right == NULL)
-		{
+void FanoCodeStore::DEcompressData(std::ifstream& Input, std::ofstream& Output) {
+	if (NextAction == Action::Decompress) {
+		if (FanoTree.Root->Left == NULL && FanoTree.Root->Right == NULL) {
 			for (long i = 0; i < TotalAmount; i++) Output << FanoTree.Root->UniqByte;
 			return;
 		}
@@ -303,8 +269,7 @@ void FanoCodeStore::DEcompressData(std::ifstream& Input, std::ofstream& Output)
 			else Bypass = Bypass->Right;
 			if ((Bypass->Left != NULL && Bypass->Right == NULL) || (Bypass->Left == NULL && Bypass->Right != NULL))
 				throw std::exception("ERROR: program can't continue to work. Specified file wasn't compressed at all/wasn't compressed by this program/was corrupted (step 4 dcmpr)");
-			if (Bypass->Left == NULL && Bypass->Right == NULL)
-			{
+			if (Bypass->Left == NULL && Bypass->Right == NULL) {
 				Output << Bypass->UniqByte;
 				Bypass = FanoTree.Root;
 				TotAm--;
@@ -332,29 +297,25 @@ void FanoCodeStore::DEcompressData(std::ifstream& Input, std::ofstream& Output)
 
 
 
-bool FanoCodeStore::IsDigit(unsigned char Symbol)
-{
+bool FanoCodeStore::IsDigit(unsigned char Symbol) {
 	if (Symbol >= '0' && Symbol <= '9') return true;
 	return false;
 }
 
-std::string FanoCodeStore::ToString(long Value)
-{
+std::string FanoCodeStore::ToString(long Value) {
 	std::ostringstream oss;
 	oss << Value;
 	return oss.str();
 }
 
-long FanoCodeStore::FromString(const std::string& String)
-{
+long FanoCodeStore::FromString(const std::string& String) {
 	std::istringstream iss(String);
 	long Value;
 	iss >> Value;
 	return Value;
 }
 
-void FanoCodeStore::CheckFileContents(std::ifstream& Input)
-{
+void FanoCodeStore::CheckFileContents(std::ifstream& Input) {
 	short FirstByte = Input.get();
 	if (Input.eof() != 0) throw std::exception("ERROR: file is empty");
 	short SecondByte = Input.get();

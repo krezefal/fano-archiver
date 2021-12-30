@@ -4,19 +4,18 @@
 #include <list>
 #include <vector>
 #include <string>
-#include "Triad.h"
-#include "BinaryTree.h"
+#include "triad.h"
+#include "binary_tree.hpp"
 
 using CodeFano = std::vector<bool>;
 using Column = Triad<unsigned char, long, CodeFano>;
 using Node = BinaryTree::Node;
 const int NumberOfBits = 8;
-const int ERROR_OF_THE_ENVIRONMENT_PROGRAM = 1;
+const int ENVIRONMENT_ERROR = 1;
 const int PROGRAMMER_ERROR = -1;
 const int ALL_FINE = 0;
 
-class FanoCodeStore
-{
+class FanoCodeStore {
 private:
 
 	std::map<unsigned char, CodeFano> FanoTable;
