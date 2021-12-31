@@ -46,13 +46,13 @@ For example:
 ## Theory. Example of how it works
 
 All unique messages (in our case, unique bytes, or ASCII symbols) 
-are written into a table in decreasing probability. Then messages
-in the table are split into two groups of approximately equal 
-probability. According to this procedure, two edges emanate from 
-the root of code tree and the obtained probabilities are 
-assigned to these edges as their weights.
+are written into a table in decreasing probability / amount.
+Then messages in the table are split into two groups of approximately 
+equal probability. According to this procedure, two edges emanate
+from the root of code tree and the obtained probabilities are 
+assigned to these edges as their weights. Code symbols `0` and `1` 
+are assigned to the two formed vertices. 
 
-Code symbols `0` and `1` are assigned to the two formed vertices. 
 Then, each of probability groups is again divided into two 
 subgroups of approximately equal probability. In accordance with
 this, two edges emanate from each vertex `0` and `1` with weights
@@ -67,6 +67,13 @@ the newly formed vertex turns out to be a leaf of the tree, since
 the process of dividing the probabilities for it is complete. The
 coding problem are solved when leaves are formed on all branches 
 of the binary code tree.
+
+The coding price (average length of a codeword) is a criterion for 
+the degree of coding optimality. It is calculates as follows:
+
+<p align="center">
+    <img src="examples/coding_price.png"/>
+</p>
 
 ## Implementation complexity analysis
 
