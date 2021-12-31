@@ -69,14 +69,14 @@ coding problem are solved when leaves are formed on all branches
 of the binary code tree.
 
 The **coding price** (average length of a codeword) is a criterion for 
-the degree of coding optimality. It is calculated as follows:
+the degree of coding optimality. It is calculated as follows
 
 <p align="center">
     <img src="examples/readme_img/coding_price.png" width="150"/>
 </p>
 
 where `l` is the current length of a codeword and `p` is the current 
-probability (current message amount / total amount):
+probability (current message amount / total amount), where
 
 <p align="center">
     <img src="examples/readme_img/p.png" width="100"/>
