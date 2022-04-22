@@ -14,10 +14,10 @@ and recovers the data, mapping each code to its bytes.
 
 ## Implementation
 
-The program is a CLI application that performs data archiving
-(compressing) and unpacking (decompressing). Ensure that you have
-`gcc compiler` on board and use Makefile (for Linux) to perform 
-the following actions:
+The program is a CLI application that performs data compressing 
+and  unpacking (decompressing). Ensure that you have`gcc compiler`
+on board and use Makefile (for Linux) to perform the following 
+actions:
 
 To build the binary, run `make` (at the root of repo) \
 To clean repo from the compiled objects, run `make clean`
